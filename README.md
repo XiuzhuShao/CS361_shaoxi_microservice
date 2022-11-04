@@ -1,7 +1,7 @@
 # CS361_shaoxi_microservice
 A simple web scraper REST API service that takes in a user-input zipcode and returns information about that zipcode via JSON.
 ## Requesting Data
-With a zipcode in mind, send a GET request to the URL https://shaoxi-cs361-microservice.uc.r.appspot.com/78704/<zipcode\><br/><br/>
+With a zipcode in mind, send a GET request to the URL https://shaoxi-cs361-microservice.uc.r.appspot.com/<zipcode\><br/><br/>
 Sample call: https://shaoxi-cs361-microservice.uc.r.appspot.com/78704  (Click me, this works!)<br/>
 ## Receiving Data
 Once the request is received, the service will make a separate call to an external website, scrape the resultant HTML data, and return to the user a JSON object in the response body consisting of housing-related information about the zipcode.<br/><br/>
