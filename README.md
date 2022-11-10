@@ -8,32 +8,14 @@ Once the request is received, the service will make a separate call to an extern
 Sample response from sample call:
 ```json
 {
-  "city_state": "Austin, TX",
-  "county": "Travis County",
-  "housing_occupancy_types_by_number_of_people": {
-    "owned_outright": 2090,
-    "owned_with_mortgage": 5009,
-    "renter_occupied": 14236,
-    "vacant": 2240
-  },
+  "city_state": "Austin, Texas",
+  "county": "Travis",
   "housing_units_by_number": 23575,
-  "living_arrangements_by_number_of_people": {
-    "married": 4741,
-    "single": 9824,
-    "single_guardian": 2557,
-    "single_with_roommates": 4213
-  },
-  "median_age": 32,
-  "median_home_value_by_dollar": "$347500",
-  "median_household_income_by_dollar": "$50930",
+  "median_age": "33.5",
+  "median_home_value_by_dollar": "$347,500",
+  "median_household_income_by_dollar": "$50,930",
   "population": 42117,
-  "rental_property_by_number": {
-    "one_bedroom": 5864,
-    "studio": 1026,
-    "three+_bedroom": 1343,
-    "two_bedroom": 5559
-  },
-  "timezone": "Central"
+  "timezone": "CST"
 }
 ```
 ## UML Sequence Diagram
