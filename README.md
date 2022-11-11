@@ -8,14 +8,14 @@ Once the request is received, the service will make a separate call to an extern
 Sample response from sample call:
 ```json
 {
-  "city_state": "Austin, Texas",
-  "county": "Travis",
-  "housing_units_by_number": 23575,
-  "median_age": "33.5",
-  "median_home_value_by_dollar": "$347,500",
-  "median_household_income_by_dollar": "$50,930",
-  "population": 42117,
-  "timezone": "CST"
+  "area_codes": "512,737",
+  "county": "Travis County",
+  "irs_estimated_population": "38520",
+  "latitude": "30.24",
+  "longitude": "-97.77",
+  "primary_city": "Austin",
+  "state": "TX",
+  "timezone": "America/Chicago"
 }
 ```
 ## UML Sequence Diagram
