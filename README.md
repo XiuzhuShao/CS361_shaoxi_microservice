@@ -19,4 +19,4 @@ Sample response from sample call:
 }
 ```
 ## UML Sequence Diagram
-![UML sequence](https://github.com/XiuzhuShao/CS361_shaoxi_microservice/blob/master/microservice%20uml.png)
+![UML sequence](https://github.com/XiuzhuShao/CS361_shaoxi_microservice/blob/master/microservice%20uml%20v2.png)
