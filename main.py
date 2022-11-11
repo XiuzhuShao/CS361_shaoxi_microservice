@@ -1,14 +1,52 @@
 from flask import Flask, request
-import requests
-from bs4 import BeautifulSoup
+import csv
+
+def getData(filename):
+    fields = [ ]
+    rows = [ ]
+    zip_data = dict()
+
+    # reading csv file
+    with open(filename, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+
+    # parse to dictionary object
+    for row in rows:
+
+        # First, make sure zip code is in the form of 5-digit string
+        zipcode = str(row[ 0 ])
+        if len(zipcode) < 5:
+            zipcode = "0" * (5 - len(zipcode)) + zipcode
+        row[0] = zipcode
+
+        # Initialize current zipcode object
+        curr_zip_info = dict()
+
+        # Fill in data
+        for i in range(1, len(fields)):
+            curr_zip_info[ fields[ i ] ] = row[ i ]
+
+        # Save current zipcode object into main dictionary with key = zipcode
+        zip_data[zipcode] = curr_zip_info
+
+    return zip_data
+
 
 app = Flask(__name__)
-headers = {'User-Agent': 'Chrome/106.0.5249.119'}
+filename = "zip_code_database.csv"
+zip_data = getData(filename)
 
 @app.route('/')
 def index():
     return "Please navigate to /zipcode to use this API"\
-
 
 @app.route('/<zipcode>', methods=['GET'])
 def get_info_via_zip(zipcode):
@@ -19,73 +57,10 @@ def get_info_via_zip(zipcode):
     :return: JSON
     """
     if request.method == 'GET':
-        res = dict()
-
-        # Using requests and BeautifulSoup, create soup object from which we will retrieve our data
-        url_string = "http://www.unitedstateszipcodes.org/" + str(zipcode)
-        page = requests.get(url_string, headers=headers)
-        soup = BeautifulSoup(page.content, "html.parser")
-
-        # Get all tables
-        tables = soup.find_all('table')
-
-        # If there are no tables this isn't a valid search term
-        if not tables:
-            return 'Zip code does not exist',404
-
-        # Find the post office city/state
-        res[ "city_state" ] = tables[ 0 ].find("td").text.strip().split('(')[ 0 ].strip()
-
-        # Find the county
-        res[ "county" ] = tables[ 0 ].find_all("td")[ 2 ].text.strip()
-
-        # Find the timezone
-        res[ "timezone" ] = tables[ 0 ].find_all("td")[ 3 ].text.strip().split('(')[ 0 ].strip()
-
-        # Find the population
-        res[ "population" ] = int(tables[ 1 ].find("td", class_="text-right").text.strip().replace(',', ''))
-
-        # Find the number of housing units
-        res[ "housing_units_by_number" ] = int(
-            tables[ 1 ].find_all("td", class_="text-right")[ 2 ].text.strip().replace(',', ''))
-
-        # Find the median home value
-        res[ "median_home_value_by_dollar" ] = tables[ 1 ].find_all("td", class_="text-right")[
-            3 ].text.strip().replace(',', '')
-
-        # Find the median household income
-        res[ "median_household_income_by_dollar" ] = tables[ 2 ].find_all("td", class_="text-right")[
-            3 ].text.strip().replace(',', '')
-
-        # Find the median age
-        res[ "median_age" ] = int(tables[ 3 ].find_all("td")[ 1 ].text.strip().replace(',', ''))
-
-        # Find the families vs singles information
-        res[ "living_arrangements_by_number_of_people" ] = {
-            "married": int(tables[ 10 ].find_all("td", class_="text-right")[ 0 ].text.strip().replace(',', '')),
-            "single_guardian": int(tables[ 10 ].find_all("td", class_="text-right")[ 2 ].text.strip().replace(',', '')),
-            "single": int(tables[ 10 ].find_all("td", class_="text-right")[ 4 ].text.strip().replace(',', '')),
-            "single_with_roommates": int(
-                tables[ 10 ].find_all("td", class_="text-right")[ 6 ].text.strip().replace(',', ''))
-        }
-
-        # Find the owner/renter breakdown
-        res[ "housing_occupancy_types_by_number_of_people" ] = {
-            "owned_with_mortgage": int(
-                tables[ 15 ].find_all("td", class_="text-right")[ 0 ].text.strip().replace(',', '')),
-            "owned_outright": int(tables[ 15 ].find_all("td", class_="text-right")[ 2 ].text.strip().replace(',', '')),
-            "renter_occupied": int(tables[ 15 ].find_all("td", class_="text-right")[ 4 ].text.strip().replace(',', '')),
-            "vacant": int(tables[ 15 ].find_all("td", class_="text-right")[ 6 ].text.strip().replace(',', ''))
-        }
-
-        # Find rental property by number of rooms
-        res[ "rental_property_by_number" ] = {
-            "studio": int(tables[ 17 ].find_all("td", class_="text-right")[ 0 ].text.strip().replace(',', '')),
-            "one_bedroom": int(tables[ 17 ].find_all("td", class_="text-right")[ 2 ].text.strip().replace(',', '')),
-            "two_bedroom": int(tables[ 17 ].find_all("td", class_="text-right")[ 4 ].text.strip().replace(',', '')),
-            "three+_bedroom": int(tables[ 17 ].find_all("td", class_="text-right")[ 6 ].text.strip().replace(',', ''))
-        }
-        return res, 200
+        # If the user-entered zip is not in our dictionary, return error
+        if str(zipcode) not in zip_data:
+            return 'Zip code does not exist', 404
+        return zip_data[zipcode], 200
     else:
         return 'Method not recognized', 405
 
