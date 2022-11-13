@@ -4,7 +4,7 @@ A simple web scraper REST API service that takes in a user-input zipcode and ret
 With a zipcode in mind, send a GET request to the URL https://shaoxi-cs361-microservice.uc.r.appspot.com/<zipcode\><br/><br/>
 Sample call: https://shaoxi-cs361-microservice.uc.r.appspot.com/78704  (Click me, this works!)<br/>
 ## Receiving Data
-Once the request is received, the service will make a separate call to an external website, scrape the resultant HTML data, and return to the user a JSON object in the response body consisting of housing-related information about the zipcode.<br/><br/>
+Once the request is received, the service return information about the zipcode if this zipcode exists in the local csv data file, and an error message if the zipcode does not exist.<br/><br/>
 Sample response from sample call:
 ```json
 {
@@ -19,6 +19,4 @@ Sample response from sample call:
 }
 ```
 ## UML Sequence Diagram
-![UML sequence](https://github.com/XiuzhuShao/CS361_shaoxi_microservice/blob/master/microservice%20uml.png)
-## Important Notes
-Although rudimentary error-checking has been implemented to account for invalid zipcodes, the user should attempt to request info for valid zipcodes only, so that the number of API calls made to the external site can be minimized.
+![UML sequence](https://github.com/XiuzhuShao/CS361_shaoxi_microservice/blob/master/microservice%20uml%20v2.png)
