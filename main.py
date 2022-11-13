@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 import csv
 
 def getData(filename):
@@ -41,14 +42,18 @@ def getData(filename):
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 filename = "zip_code_database.csv"
 zip_data = getData(filename)
 
 @app.route('/')
+@cross_origin()
 def index():
     return "Please navigate to /zipcode to use this API"\
 
 @app.route('/<zipcode>', methods=['GET'])
+@cross_origin()
 def get_info_via_zip(zipcode):
     """
     Fetches info from https://unitedstateszipcodes.org/<zipcode> and parses info via beautiful soup. Returns a JSON object
